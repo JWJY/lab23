@@ -1,17 +1,20 @@
 #include <windows.h>
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 char szClassName[ ] = "TextEntry";
-char textSaved[20];
-HWND textfield, button, TextBox1, TextBox2;
+char textSaved1[20],textSaved2[20];
+HWND textfield, button1, button2, button3, button4, TextBox1, TextBox2;
+
 
 /* This is where all the input to the window goes to */
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch(Message) {
 
-		case WM_CREATE:
+		case WM_CREATE:{
 
 		TextBox1 = CreateWindow("EDIT",
 								"",
@@ -25,61 +28,92 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 								20, 85, 200, 20,
 								hwnd, NULL, NULL, NULL);
 
-		CreateWindow("BUTTON",
+		button1 = CreateWindow("BUTTON",
 						"+",
 						WS_BORDER|WS_CHILD|WS_VISIBLE,
 						40, 120, 30, 20,
 						hwnd, (HMENU) 1, NULL, NULL);
 
-		CreateWindow("BUTTON",
+		button2 = CreateWindow("BUTTON",
 						"-",
 						WS_BORDER|WS_CHILD|WS_VISIBLE,
 						80, 120, 30, 20,
-						hwnd, (HMENU) 1, NULL, NULL);
+						hwnd, (HMENU) 2, NULL, NULL);
 
-		CreateWindow("BUTTON",
+		button3 = CreateWindow("BUTTON",
 						"*",
 						WS_BORDER|WS_CHILD|WS_VISIBLE,
 						120, 120, 30, 20,
-						hwnd, (HMENU) 1, NULL, NULL);
+						hwnd, (HMENU) 3, NULL, NULL);
 
-		CreateWindow("BUTTON",
+		button4 = CreateWindow("BUTTON",
 						"/",
 						WS_BORDER|WS_CHILD|WS_VISIBLE,
 						160, 120, 30, 20,
-						hwnd, (HMENU) 1, NULL, NULL);
+						hwnd, (HMENU) 4, NULL, NULL);
 
 		textfield = CreateWindow("STATIC",
 								"Please input two numbers", 
 								WS_VISIBLE|WS_CHILD,
 								20, 20, 200, 20,
 								hwnd, NULL, NULL, NULL);
-		/*button = CreateWindow("BUTTON",
-								"This",
-								WS_VISIBLE|WS_CHILD|WS_BORDER,
-								20,120,200,20,
-								hwnd, (HMENU) 1, NULL, NULL);*/
 
 		break;
+		}
 
-		case WM_COMMAND:
+		case WM_COMMAND:{
+		
+		if(LOWORD(wParam)!=0){
+			int n1 = 0;
+			int n2 = 0;
+			n1 = GetWindowText(TextBox1, &textSaved1[0], 20);
+			n2 = GetWindowText(TextBox2, &textSaved2[0], 20);
+		}
 
 			switch (LOWORD(wParam))
 			{
-				/*case 1:
-				::MessageBeep(MB_ICONERROR);
-				::MessageBox(hwnd, "Button was clicked", "Button was clicked",MB_OK);
-				break;*/
+
+				{
 				case 1:
-				int gwtstat = 0;
-				char *t = &textSaved[0];
-				gwtstat = GetWindowText(TextBox1, &textSaved[0], 20);
-				::MessageBox(hwnd, textSaved, textSaved,MB_OK);
+				float x = atof(textSaved1)+atof(textSaved2);
+				char t[100];
+				sprintf(t, "%f", x);
+				::MessageBox(hwnd, t, "Result" ,MB_OK);
 				break;
+				}
+
+				{
+				case 2:
+				float x = atof(textSaved1)-atof(textSaved2);
+				char t[100];
+				sprintf(t, "%f", x);
+				::MessageBox(hwnd, t, "Result" ,MB_OK);
+				break;
+				}
+
+				{
+				case 3:
+				float x = atof(textSaved1)*atof(textSaved2);
+				char t[100];
+				sprintf(t, "%f", x);
+				::MessageBox(hwnd, t, "Result" ,MB_OK);
+				break;
+				}
+
+				{
+				case 4:
+				float x = atof(textSaved1)/atof(textSaved2);
+				char t[100];
+				sprintf(t, "%f", x);
+				::MessageBox(hwnd, t, "Result" ,MB_OK);
+				break;
+				}
 			}
 
 		break;
 		/* Upon destruction, tell the main thread to stop */
+		}
+
 		case WM_DESTROY: {
 			PostQuitMessage(0);
 			break;
